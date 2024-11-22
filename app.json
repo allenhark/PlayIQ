@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "playiq-admin",
-    "slug": "playiq-admin",
+    "name": "PlayIq Admin",
+    "slug": "playiqadmin",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -16,13 +16,35 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+      "package": "com.playiq.admin",
+      "softwareKeyboardLayoutMode": "pan",
+      "versionCode": 2,
+      "icon": "./assets/icon.png"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 34,
+            "targetSdkVersion": 34,
+            "buildToolsVersion": "34.0.0"
+          },
+          "ios": {
+            "deploymentTarget": "15.1",
+            "useFrameworks": "static"
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "e3576553-1987-4404-b73e-5b19bb616c79"
+      }
     }
   }
 }
