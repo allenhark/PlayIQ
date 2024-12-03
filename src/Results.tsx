@@ -5,7 +5,8 @@ import { Spinner, Text } from "@ui-kitten/components";
 import Api from "Api";
 import { EarthIcon, RefreshIcon, Search01Icon } from "@agworld/icons";
 import * as Linking from 'expo-linking';
-
+import { WebView } from 'react-native-webview';
+import Constants from 'expo-constants';
 const { width, height } = Dimensions.get("window");
 
 export default function Results() {
@@ -15,6 +16,9 @@ export default function Results() {
     const [dis, setDis] = useState(false)
     const [ll, setLL] = useState(0)
     const [err1, setErr] = useState(false)
+    const [find, setFind] = useState(null) as any;
+    const [show, setShow] = useState(false)
+    const [webviewLoading, setWebviewLoading] = useState(false);
 
     useEffect(() => {
         fetchTip();
@@ -25,14 +29,16 @@ export default function Results() {
 
         setLoading(true)
         setTip({})
+        setShow(false)
 
         try {
 
             let { data } = await Api.get('admin/game')
 
-            setTip(data)
+            await setTip(data)
 
             // console.log(data)
+            await search()
 
         }
         catch (err) {
@@ -99,8 +105,24 @@ export default function Results() {
     const search = async () => {
         let string = `${tip.home} vs ${tip.away} - ${tip.sport}  - ${tip?.country?.name}`
 
+        setFind('https://www.google.com/search?q=' + string)
+        setShow(true)
+
+        // console.log(show, find)
+
+        // try {
+        //     Linking.openURL('https://www.google.com/search?q=' + string);
+
+        // }
+        // catch (err) {
+        //     console.log(err)
+        // }
+    }
+
+    const privacy = async () => {
+
         try {
-            Linking.openURL('https://www.google.com/search?q=' + string);
+            Linking.openURL('https://freeprivacy7.wordpress.com/2024/11/20/privacy-policy-for-predictmate-admin/');
 
         }
         catch (err) {
@@ -248,7 +270,8 @@ export default function Results() {
                 {!loading && !err1 &&
                     <View
                         style={{
-                            padding: 20
+                            paddingHorizontal: 10,
+                            paddingBottom: 10
                         }}
                     >
 
@@ -283,7 +306,7 @@ export default function Results() {
                                 style={{
                                     flexDirection: 'row',
                                     alignItems: "center",
-                                    marginBottom: 20,
+                                    marginBottom: 5,
                                 }}
                             >
                                 {tip?.country?.iso === "XZ" || tip?.country?.iso === "EN" ?
@@ -380,7 +403,7 @@ export default function Results() {
                             style={{
                                 flexDirection: "row",
                                 justifyContent: "space-between",
-                                marginTop: 50,
+                                marginTop: 5,
 
                             }}
                         >
@@ -492,6 +515,32 @@ export default function Results() {
 
                     </View>
                 }
+
+                {show && (
+                    <>
+                        {webviewLoading && (
+                            <View style={{
+                                paddingVertical: 5,
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}>
+                                <Spinner size="tiny" />
+                                <Text appearance="hint" style={{ marginTop: 10 }}>Loading...</Text>
+                            </View>
+                        )}
+                        <WebView
+                            style={{
+                                flex: 1,
+                                height: '100%',
+                                minHeight: height * .8
+                            }}
+                            source={{ uri: `${find}&hl=en` }}
+                            onLoadStart={() => setWebviewLoading(true)}
+                            onLoadEnd={() => setWebviewLoading(false)}
+                            nestedScrollEnabled={true}
+                        />
+                    </>
+                )}
 
             </ScrollView>
 

@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'PlayIq Admin'
+rootProject.name = 'PredictMate Admin'
 
 dependencyResolutionManagement {
   versionCatalogs {
